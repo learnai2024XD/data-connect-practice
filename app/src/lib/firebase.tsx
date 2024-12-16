@@ -24,13 +24,16 @@ import { connectorConfig } from '@movie/dataconnect';
 import { createContext } from "react";
 
 const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "PROJECT_ID.firebaseapp.com",
-  projectId: "PROJECT_ID",
-  storageBucket: "PROJECT_ID.appspot.com",
-  messagingSenderId: "SENDER_ID",
-  appId: "APP_ID"
+  apiKey: "AIzaSyC9Om-WIOuFTs8Iex6ra_wXfjpa2sVzL40",
+  authDomain: "test-92fe8.firebaseapp.com",
+  databaseURL: "https://test-92fe8.firebaseio.com",
+  projectId: "test-92fe8",
+  storageBucket: "test-92fe8.firebasestorage.app",
+  messagingSenderId: "1036787337640",
+  appId: "1:1036787337640:web:02b1aa38340bb57c44b59d",
+  measurementId: "G-QQ0S0WCCKF"
 };
+
 
 const firebaseApp =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
@@ -39,7 +42,7 @@ const auth = getAuth(firebaseApp);
 const dataconnect = getDataConnect(firebaseApp, connectorConfig);
 
 if (process.env.NODE_ENV === "development") {
-  connectDataConnectEmulator(dataconnect, "127.0.0.1", 9399, false);
+  connectDataConnectEmulator(dataconnect, "127.0.0.1", 9401,false);
   connectAuthEmulator(auth, "http://localhost:9099");
 }
 

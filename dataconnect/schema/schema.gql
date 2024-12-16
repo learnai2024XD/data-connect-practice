@@ -40,3 +40,67 @@
 # Reviews
 # TODO: Fill out Review table
 
+type Movie
+  @table {
+  id: UUID! @default(expr: "uuidV4()")
+  title: String!
+  imageUrl: String!
+  releaseYear: Int
+  genre: String
+  rating: Float
+  description: String
+  tags: [String]
+}
+
+type MovieMetadata
+  @table {
+  # @ref creates a field in the current table (MovieMetadata)
+  # It is a reference that holds the primary key of the referenced type
+  # In this case, @ref(fields: "movieId", references: "id") is implied
+  movie: Movie! @ref
+  # movieId: UUID <- this is created by the above @ref
+  director: String
+}
+
+type Actor @table {
+  id: UUID!
+  imageUrl: String! 
+  name: String! @col(name: "name", dataType: "varchar(30)")
+}
+
+type MovieActor @table(key: ["movie", "actor"]) {
+  # @ref creates a field in the current table (MovieActor) that holds the primary key of the referenced type
+  # In this case, @ref(fields: "id") is implied
+  movie: Movie!
+  # movieId: UUID! <- this is created by the implied @ref, see: implicit.gql
+
+  actor: Actor!
+  # actorId: UUID! <- this is created by the implied  @ref, see: implicit.gql
+
+  role: String! # "main" or "supporting"
+}
+
+type User
+  @table {
+  id: String! @col(name: "auth_uid")
+  username: String! @col(dataType: "varchar(50)")
+  # The following are generated from the @ref in the Review table
+  # reviews_on_user 
+  # movies_via_Review
+}
+
+type FavoriteMovie
+  @table(name: "FavoriteMovies", singular: "favorite_movie", plural: "favorite_movies", key: ["user", "movie"]) {
+  # @ref is implicit
+  user: User!
+  movie: Movie!
+}
+
+type Review @table(name: "Reviews", key: ["movie", "user"]) {
+  id: UUID! @default(expr: "uuidV4()")
+  user: User!
+  movie: Movie!
+  rating: Int
+  reviewText: String
+  reviewDate: Date! @default(expr: "request.time")
+}
